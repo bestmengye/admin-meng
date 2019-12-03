@@ -1,2 +1,2 @@
 # admin-meng
-一个简单的分布式项目，集成技术swagger、rabbitmq、springboot
+一个简单的分布式项目，集成一些主流技术springboot、swagger、rabbitmq、redis....
