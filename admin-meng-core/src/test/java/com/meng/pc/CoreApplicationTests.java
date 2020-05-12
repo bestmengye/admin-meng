@@ -1,13 +1,13 @@
 package com.meng.pc;
 
-//import org.junit.jupiter.api.Test;
-//import org.springframework.boot.test.context.SpringBootTest;
+/*import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-//@SpringBootTest
+@SpringBootTest
 class CoreApplicationTests {
 
-    /*@Test
+    @Test
     void contextLoads() {
-    }*/
+    }
 
-}
+}*/
