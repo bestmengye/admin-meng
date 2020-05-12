@@ -1,10 +1,10 @@
-package com.example.adminmengcore;
+package com.meng.pc;
 
 //import org.junit.jupiter.api.Test;
 //import org.springframework.boot.test.context.SpringBootTest;
 
 //@SpringBootTest
-class AdminMengCoreApplicationTests {
+class CoreApplicationTests {
 
     /*@Test
     void contextLoads() {

@@ -1,13 +1,14 @@
-package com.example.adminmengpc;
+package com.meng.app;
+
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AdminMengPcApplication {
+public class AppApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AdminMengPcApplication.class, args);
+        SpringApplication.run(AppApplication.class, args);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.adminmengpc;
+package com.meng.pc;
 
 //import org.junit.jupiter.api.Test;
 //import org.springframework.boot.test.context.SpringBootTest;

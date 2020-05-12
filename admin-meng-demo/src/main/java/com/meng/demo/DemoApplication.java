@@ -1,13 +1,13 @@
-package com.example.adminmengcore;
+package com.meng.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AdminMengCoreApplication {
+public class DemoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AdminMengCoreApplication.class, args);
+        SpringApplication.run(DemoApplication.class, args);
     }
 
 }
