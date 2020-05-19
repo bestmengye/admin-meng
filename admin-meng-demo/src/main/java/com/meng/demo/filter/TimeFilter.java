@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * @Desc
  * @date 2020/5/18 15:25
  */
-//@Component
+@Component
 public class TimeFilter implements Filter {
 
 
@@ -22,22 +22,22 @@ public class TimeFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        logger.info("filter init");
+        System.out.println("filter init");
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
-        logger.info("filter start");
+        System.out.println("filter start");
         LocalDateTime start = LocalDateTime.now();
         chain.doFilter(servletRequest,servletResponse);
         LocalDateTime end = LocalDateTime.now();
         Duration duration = Duration.between(start,end);
-        logger.info("timerFilter耗时:"+duration.toMillis());
-        logger.info("filter finish");
+        System.out.println("timerFilter耗时:"+duration.toMillis());
+        System.out.println("filter finish");
     }
 
     @Override
     public void destroy() {
-        logger.info("filter destroy");
+        System.out.println("filter destroy");
     }
 }

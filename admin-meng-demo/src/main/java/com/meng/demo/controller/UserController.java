@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author mengye
+ * @Desc 用户控制器
+ * @date 2020/5/18 15:25
+ */
 @RestController
 @RequestMapping("/user")
 public class UserController{
@@ -28,13 +33,14 @@ public class UserController{
     }
 
     //正则匹配数字
+    @SuppressWarnings("AlibabaCommentsMustBeJavadocFormat")
     @GetMapping("/{id:\\d+}")
     @JsonView(User.detail.class)
     public User getUserById(@PathVariable("id") Integer id){
         throw new UserNotExistException(id);
-       /* System.out.println("进入根据id获取用户信息的方法");
+       /* System.out.println("-------------------------------------进入根据id获取用户信息的方法");
         User user=new User(4,"孟野",123456,null);
-        System.out.println("执行完毕获取用户信息的方法");
+        System.out.println("-------------------------------------执行完毕获取用户信息的方法");
         return user;*/
     }
 
