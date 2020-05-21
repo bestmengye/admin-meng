@@ -4,6 +4,7 @@ package com.meng.demo.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.meng.demo.dto.User;
 import com.meng.demo.exception.UserNotExistException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.validation.annotation.Validated;
@@ -11,18 +12,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * @author mengye
  * @Desc 用户控制器
  * @date 2020/5/18 15:25
  */
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController{
 
     @GetMapping
-    @JsonView(User.simple.class)
+    @JsonView(User.Simple.class)
     public List<User> list(){
         ReflectionToStringBuilder.toString("mengye", ToStringStyle.DEFAULT_STYLE);
         List<User> list=new ArrayList();
@@ -32,16 +35,32 @@ public class UserController{
         return list;
     }
 
-    //正则匹配数字
-    @SuppressWarnings("AlibabaCommentsMustBeJavadocFormat")
+    /**
+     * 查询用户id信息
+     *
+     * @param id 只可以匹配数字
+     * @return
+     */
     @GetMapping("/{id:\\d+}")
-    @JsonView(User.detail.class)
-    public User getUserById(@PathVariable("id") Integer id){
-        throw new UserNotExistException(id);
-       /* System.out.println("-------------------------------------进入根据id获取用户信息的方法");
-        User user=new User(4,"孟野",123456,null);
-        System.out.println("-------------------------------------执行完毕获取用户信息的方法");
-        return user;*/
+    @JsonView(User.Detail.class)
+    public Callable<User> getUserById(@PathVariable("id") Integer id) throws InterruptedException {
+//        throw new UserNotExistException(id);
+
+        log.info("-------------------------------------进入根据id获取用户信息的方法");
+        Callable<User> userCallable= new Callable<User>() {
+
+            @Override
+            public User call() throws Exception {
+                log.info("我是子线程 start --------------");
+                User user=new User();
+                user.setAge(200);
+                user.setName("我是子的线程");
+                log.info("我是子线程 end --------------");
+                return user;
+            }
+        };
+        log.info("-------------------------------------执行完毕获取用户信息的方法");
+        return userCallable;
     }
 
     @PostMapping

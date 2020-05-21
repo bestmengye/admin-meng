@@ -18,21 +18,21 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    public interface simple{}
-    public interface detail extends simple{}
+    public interface Simple{}
+    public interface Detail extends Simple{}
 
-    @JsonView(simple.class)
+    @JsonView(Simple.class)
     private Integer id;
 
-    @JsonView(simple.class)
+    @JsonView(Simple.class)
     @NotNull(message = "姓名不能为空")
     private String name;
 
-    @JsonView(simple.class)
+    @JsonView(Simple.class)
     @Min(value = 0,message = "年龄不能小于0")
     private Integer age;
 
-    @JsonView(detail.class)
+    @JsonView(Detail.class)
     @Length(min = 6,message = "密码不能小于6位")
     private String password;
 }
