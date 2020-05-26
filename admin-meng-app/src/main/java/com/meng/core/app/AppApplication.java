@@ -1,4 +1,4 @@
-package com.meng.app;
+package com.meng.core.app;
 
 
 import org.springframework.boot.SpringApplication;

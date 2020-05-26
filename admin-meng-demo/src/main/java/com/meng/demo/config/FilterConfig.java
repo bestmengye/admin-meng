@@ -2,7 +2,6 @@ package com.meng.demo.config;
 
 import com.meng.demo.filter.TimeFilter;
 import com.meng.demo.interceptor.TimeInterceptor;
-import org.apache.catalina.filters.AddDefaultCharsetFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +11,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Filter;
 
 /**
  * @author mengye

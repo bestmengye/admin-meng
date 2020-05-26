@@ -3,7 +3,6 @@ package com.meng.demo.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.meng.demo.dto.User;
-import com.meng.demo.exception.UserNotExistException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;

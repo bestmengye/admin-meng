@@ -1,5 +1,7 @@
-package com.meng.pc.config;
+package com.meng.core.pc.config;
 
+import com.meng.core.properties.SecurityProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,16 +22,20 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Autowired
+    private SecurityProperties securityProperties;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http.formLogin()
-                .loginPage("/login.html")
+                .loginPage("/authentication/require")
                 //处理登录的请求
                 .loginProcessingUrl("/admin-meng/login")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login.html").permitAll()
+                .antMatchers("/authentication/require",
+                        securityProperties.getPc().getLoginPage()) .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

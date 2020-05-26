@@ -1,4 +1,4 @@
-package com.meng.adminmengapp;
+package com.meng.core.adminmengapp;
 
 /*
 import org.junit.jupiter.api.Test;

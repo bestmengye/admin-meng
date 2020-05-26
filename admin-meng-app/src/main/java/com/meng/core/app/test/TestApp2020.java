@@ -1,4 +1,4 @@
-package com.meng.app.test;
+package com.meng.core.app.test;
 
 /**
  * @author mengye

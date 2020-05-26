@@ -1,4 +1,4 @@
-package com.meng.pc.service;
+package com.meng.core.pc.service;
 
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
