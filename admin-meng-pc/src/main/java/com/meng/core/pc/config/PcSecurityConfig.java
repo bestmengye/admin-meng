@@ -1,5 +1,7 @@
 package com.meng.core.pc.config;
 
+import com.meng.core.pc.authentication.AdminAuthenticationFailureHandler;
+import com.meng.core.pc.authentication.AdminAuthenticationSuccessHandler;
 import com.meng.core.properties.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +27,12 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SecurityProperties securityProperties;
 
+    @Autowired
+    private AdminAuthenticationSuccessHandler adminAuthenticationSuccessHandler;
+
+    @Autowired
+    private AdminAuthenticationFailureHandler adminAuthenticationFailureHandler;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -32,6 +40,8 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/authentication/require")
                 //处理登录的请求
                 .loginProcessingUrl("/admin-meng/login")
+                .successHandler(adminAuthenticationSuccessHandler)
+                .failureHandler(adminAuthenticationFailureHandler)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/authentication/require",
