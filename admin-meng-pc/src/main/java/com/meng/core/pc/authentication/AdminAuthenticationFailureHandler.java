@@ -40,7 +40,7 @@ public class AdminAuthenticationFailureHandler extends SimpleUrlAuthenticationFa
         log.info("登陆失败"+objectMapper.writeValueAsString(exception));
 
         if(LoginType.JSON.equals(securityProperties.getPc().getLoginType())){
-            response.setContentType("application/json;charset=UFT-8");
+            response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write(objectMapper.writeValueAsString(exception));
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }else {

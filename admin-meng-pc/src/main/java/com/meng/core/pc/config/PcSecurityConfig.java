@@ -40,7 +40,9 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/authentication/require")
                 //处理登录的请求
                 .loginProcessingUrl("/admin-meng/login")
+                //登录成功的处理
                 .successHandler(adminAuthenticationSuccessHandler)
+                //登录失败的处理
                 .failureHandler(adminAuthenticationFailureHandler)
                 .and()
                 .authorizeRequests()
