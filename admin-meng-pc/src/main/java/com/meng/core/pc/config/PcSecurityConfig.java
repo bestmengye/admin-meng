@@ -3,13 +3,16 @@ package com.meng.core.pc.config;
 import com.meng.core.pc.authentication.AdminAuthenticationFailureHandler;
 import com.meng.core.pc.authentication.AdminAuthenticationSuccessHandler;
 import com.meng.core.properties.SecurityProperties;
+import com.meng.core.validate.code.ValidateCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @author mengye
@@ -20,7 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
-    public PasswordEncoder getEncoder(){
+    public PasswordEncoder getEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -35,8 +38,12 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // 图片验证码
+        ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
+        validateCodeFilter.setAuthenticationFailureHandler(adminAuthenticationFailureHandler);
 
-        http.formLogin()
+        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+                .formLogin()
                 .loginPage("/authentication/require")
                 //处理登录的请求
                 .loginProcessingUrl("/admin-meng/login")
@@ -47,7 +54,7 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/authentication/require",
-                        securityProperties.getPc().getLoginPage()) .permitAll()
+                        securityProperties.getPc().getLoginPage(), "/code/image").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

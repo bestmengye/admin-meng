@@ -1,6 +1,7 @@
 package com.meng.core.pc.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meng.core.pc.support.SimpleResponse;
 import com.meng.core.properties.LoginType;
 import com.meng.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,7 @@ public class AdminAuthenticationFailureHandler extends SimpleUrlAuthenticationFa
 
         if(LoginType.JSON.equals(securityProperties.getPc().getLoginType())){
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(objectMapper.writeValueAsString(exception));
+            response.getWriter().write(objectMapper.writeValueAsString(new SimpleResponse(exception.getMessage())));
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }else {
             super.onAuthenticationFailure(request,response,exception);
