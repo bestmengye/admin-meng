@@ -16,4 +16,21 @@ public class SecurityProperties {
 
     private PcProperties pc = new PcProperties();
 
+    private ValidateCodeProperties code = new ValidateCodeProperties();
+
+    public PcProperties getPc() {
+        return pc;
+    }
+
+    public void setPc(PcProperties pc) {
+        this.pc = pc;
+    }
+
+    public ValidateCodeProperties getCode() {
+        return code;
+    }
+
+    public void setCode(ValidateCodeProperties code) {
+        this.code = code;
+    }
 }
