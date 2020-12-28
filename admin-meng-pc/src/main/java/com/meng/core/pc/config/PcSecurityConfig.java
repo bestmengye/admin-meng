@@ -10,9 +10,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 /**
  * @author mengye
@@ -22,11 +27,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    public PasswordEncoder getEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Autowired
     private SecurityProperties securityProperties;
 
@@ -35,6 +35,28 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AdminAuthenticationFailureHandler adminAuthenticationFailureHandler;
+
+    /**
+     * 注入数据源
+     */
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Bean
+    public PasswordEncoder getEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(){
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+//        tokenRepository.setCreateTableOnStartup(true);
+        return tokenRepository;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -46,13 +68,18 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
-                .loginPage("/authentication/require")
-                //处理登录的请求
-                .loginProcessingUrl("/admin-meng/login")
-                //登录成功的处理
-                .successHandler(adminAuthenticationSuccessHandler)
-                //登录失败的处理
-                .failureHandler(adminAuthenticationFailureHandler)
+                    .loginPage("/authentication/require")
+                    //处理登录的请求
+                    .loginProcessingUrl("/admin-meng/login")
+                    //登录成功的处理
+                    .successHandler(adminAuthenticationSuccessHandler)
+                    //登录失败的处理
+                    .failureHandler(adminAuthenticationFailureHandler)
+                    .and()
+                .rememberMe()
+                    .tokenRepository(persistentTokenRepository())
+                    .tokenValiditySeconds(securityProperties.getPc().getRememberMeSeconds())
+                    .userDetailsService(userDetailsService)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/authentication/require",

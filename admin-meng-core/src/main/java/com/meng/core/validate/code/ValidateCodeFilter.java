@@ -109,8 +109,10 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
     public void afterPropertiesSet() throws ServletException {
         super.afterPropertiesSet();
         String[] configUrl = StringUtils.splitByWholeSeparatorPreserveAllTokens(securityProperties.getCode().getImageCode().getUrl(), ",");
-        for (String s : configUrl) {
-            urls.add(s);
+        if (configUrl != null && configUrl.length > 0) {
+            for (String s : configUrl) {
+                urls.add(s);
+            }
         }
         urls.add("/admin-meng/login");
     }
