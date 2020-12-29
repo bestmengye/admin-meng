@@ -48,6 +48,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
         System.out.println(requestURI);
 
         boolean action = false;
+        // 匹配设置的路径
         for (String url : urls) {
             if (antPathMatcher.match(url, request.getRequestURI())) {
                 action = true;

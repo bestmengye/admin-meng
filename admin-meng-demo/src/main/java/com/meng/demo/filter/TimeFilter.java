@@ -6,38 +6,27 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 /**
  * @author mengye
- * @Desc
+ * @Desc  计时过滤器
  * @date 2020/5/18 15:25
  */
 @Component
 public class TimeFilter implements Filter {
 
-
-    Logger logger=LoggerFactory.getLogger(TimeFilter.class);
+    Logger logger = LoggerFactory.getLogger(TimeFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        System.out.println("filter init");
+    public void init(FilterConfig filterConfig){
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
-        System.out.println("filter start");
-        LocalDateTime start = LocalDateTime.now();
-        chain.doFilter(servletRequest,servletResponse);
-        LocalDateTime end = LocalDateTime.now();
-        Duration duration = Duration.between(start,end);
-        System.out.println("timerFilter耗时:"+duration.toMillis());
-        System.out.println("filter finish");
+        chain.doFilter(servletRequest, servletResponse);
     }
 
     @Override
     public void destroy() {
-        System.out.println("filter destroy");
     }
 }
