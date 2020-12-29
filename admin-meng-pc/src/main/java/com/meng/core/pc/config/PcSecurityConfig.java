@@ -83,7 +83,7 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/authentication/require",
-                        securityProperties.getPc().getLoginPage(), "/code/image").permitAll()
+                        securityProperties.getPc().getLoginPage(), "/code/*").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

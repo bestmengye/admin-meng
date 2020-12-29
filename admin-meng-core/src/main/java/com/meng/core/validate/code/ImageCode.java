@@ -1,40 +1,29 @@
 package com.meng.core.validate.code;
 
-import lombok.Data;
-
 import java.awt.image.BufferedImage;
-import java.time.LocalDateTime;
 
 /**
  * @author mengye
- * @desc
+ * @desc 图片验证码
  * @date 2020/12/22 15:52
  */
-@Data
-public class ImageCode {
+public class ImageCode extends ValidateCode {
 
     /**
-     * 图形验证码
+     * 图片
      */
     private BufferedImage image;
 
-    /**
-     * 验证码
-     */
-    private String code;
-
-    /**
-     * 过期时间
-     */
-    private LocalDateTime expireTime;
-
-    public ImageCode(BufferedImage bufferedImage, String code, int expireSecond) {
-        this.image = bufferedImage;
-        this.code = code;
-        this.expireTime = LocalDateTime.now().plusSeconds(expireSecond);
+    public ImageCode(BufferedImage image, String code, int expireSecond) {
+        super(code, expireSecond);
+        this.image = image;
     }
 
-    public boolean isExpired() {
-        return LocalDateTime.now().isAfter(expireTime);
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public void setImage(BufferedImage image) {
+        this.image = image;
     }
 }

@@ -1,6 +1,8 @@
 package com.meng.core.validate.code;
 
 import com.meng.core.properties.SecurityProperties;
+import com.meng.core.validate.code.sms.DefaultSmsCodeSender;
+import com.meng.core.validate.code.sms.SmsCodeSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -23,5 +25,11 @@ public class ValidateCodeBeanConfig {
         ImageCodeGenerator imageCodeGenerator = new ImageCodeGenerator();
         imageCodeGenerator.setSecurityProperties(securityProperties);
         return imageCodeGenerator;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(SmsCodeSender.class)
+    public SmsCodeSender smsCodeGenerator() {
+        return new DefaultSmsCodeSender();
     }
 }

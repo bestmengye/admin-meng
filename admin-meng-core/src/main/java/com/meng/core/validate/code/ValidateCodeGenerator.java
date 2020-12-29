@@ -4,10 +4,16 @@ import org.springframework.web.context.request.ServletWebRequest;
 
 /**
  * @author mengye
- * @desc 验证码生成起
+ * @desc 验证码生成器
  * @date 2020/12/23 17:54
  */
 public interface ValidateCodeGenerator {
 
-    ImageCode generatorImageCode(ServletWebRequest request);
+    /**
+     * 生成验证码
+     *
+     * @param request
+     * @return
+     */
+    ValidateCode generatorImageCode(ServletWebRequest request);
 }
