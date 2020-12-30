@@ -2,6 +2,7 @@ package com.meng.core.validate.code;
 
 import com.meng.core.properties.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 
@@ -14,6 +15,7 @@ import java.util.Random;
  * @desc 图片验证码 生成实现
  * @date 2020/12/23 17:55
  */
+@Component("imageCodeGenerator")
 public class ImageCodeGenerator implements ValidateCodeGenerator {
 
 
@@ -26,7 +28,7 @@ public class ImageCodeGenerator implements ValidateCodeGenerator {
      * @return
      */
     @Override
-    public ImageCode generatorImageCode(ServletWebRequest request) {
+    public ImageCode generator(ServletWebRequest request) {
         int width = ServletRequestUtils.getIntParameter(request.getRequest(),"width",securityProperties.getCode().getImageCode().getWidth());
         int height = ServletRequestUtils.getIntParameter(request.getRequest(),"height",securityProperties.getCode().getImageCode().getHeight());
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
