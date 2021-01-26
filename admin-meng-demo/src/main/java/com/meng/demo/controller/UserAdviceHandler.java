@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * @author mengye
- * @Desc
+ * @Desc 用户异常处理
  * @date 2020/5/18 14:08
  */
 @ControllerAdvice
