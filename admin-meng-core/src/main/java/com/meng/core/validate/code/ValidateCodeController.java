@@ -23,7 +23,7 @@ public class ValidateCodeController {
     /**
      * session图片验证码key
      */
-    public static final String SESSION_KEY_IMAGE_CODE = "SESSION_KEY_CODE_IMAGE";
+    public static final String SESSION_KEY_CODE = "SESSION_KEY_CODE_";
 
     @Autowired
     private Map<String, ValidateCodeProcessor> validateCodeProcessors;

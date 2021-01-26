@@ -1,13 +1,14 @@
 package com.meng.core.pc.config;
 
+import com.meng.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.meng.core.pc.authentication.AdminAuthenticationFailureHandler;
 import com.meng.core.pc.authentication.AdminAuthenticationSuccessHandler;
 import com.meng.core.properties.SecurityProperties;
+import com.meng.core.validate.code.SmsCodeFilter;
 import com.meng.core.validate.code.ValidateCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -45,13 +46,16 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+
     @Bean
     public PasswordEncoder getEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public PersistentTokenRepository persistentTokenRepository(){
+    public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
         tokenRepository.setDataSource(dataSource);
 //        tokenRepository.setCreateTableOnStartup(true);
@@ -66,20 +70,28 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
         validateCodeFilter.setSecurityProperties(securityProperties);
         validateCodeFilter.afterPropertiesSet();
 
-        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+        // 短信验证码
+        SmsCodeFilter smsCodeFilter = new SmsCodeFilter();
+        smsCodeFilter.setAuthenticationFailureHandler(adminAuthenticationFailureHandler);
+        smsCodeFilter.setSecurityProperties(securityProperties);
+        smsCodeFilter.afterPropertiesSet();
+
+
+        http.addFilterBefore(smsCodeFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
-                    .loginPage("/authentication/require")
-                    //处理登录的请求
-                    .loginProcessingUrl("/admin-meng/login")
-                    //登录成功的处理
-                    .successHandler(adminAuthenticationSuccessHandler)
-                    //登录失败的处理
-                    .failureHandler(adminAuthenticationFailureHandler)
-                    .and()
+                .loginPage("/authentication/require")
+                //处理登录的请求
+                .loginProcessingUrl("/admin-meng/login")
+                //登录成功的处理
+                .successHandler(adminAuthenticationSuccessHandler)
+                //登录失败的处理
+                .failureHandler(adminAuthenticationFailureHandler)
+                .and()
                 .rememberMe()
-                    .tokenRepository(persistentTokenRepository())
-                    .tokenValiditySeconds(securityProperties.getPc().getRememberMeSeconds())
-                    .userDetailsService(userDetailsService)
+                .tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(securityProperties.getPc().getRememberMeSeconds())
+                .userDetailsService(userDetailsService)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/authentication/require",
@@ -87,6 +99,7 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .csrf().disable();
+                .csrf().disable()
+                .apply(smsCodeAuthenticationSecurityConfig);
     }
 }

@@ -26,7 +26,7 @@ import java.util.Set;
  * @desc 图片验证码拦截器 oncePerRequestFilter: spring security保证他只会被调用一次
  * @date 2020/12/22 16:36
  */
-public class ValidateCodeFilter extends OncePerRequestFilter implements InitializingBean {
+public class SmsCodeFilter extends OncePerRequestFilter implements InitializingBean {
 
     @Autowired
     private AuthenticationFailureHandler authenticationFailureHandler;
@@ -73,29 +73,31 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
      * @param request
      */
     private void validate(ServletWebRequest request) throws ServletRequestBindingException {
-        ImageCode imageCodeInSession = (ImageCode) sessionStrategy.getAttribute(request, ValidateCodeController.SESSION_KEY_CODE + "IMAGE");
+        ValidateCode validateCode = (ValidateCode) sessionStrategy.getAttribute(request,
+                ValidateCodeController.SESSION_KEY_CODE + "SMS");
 
         // 获取在request中的 输入的验证码
-        String codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), "imageCode");
+        String codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), "smsCode");
 
         if (StringUtils.isBlank(codeInRequest)) {
             throw new ValidateCodeException("验证码不能为空");
         }
 
-        if (codeInRequest == null) {
-            throw new ValidateCodeException("验证码不不存在");
+        if (codeInRequest == null || validateCode == null) {
+            throw new ValidateCodeException("验证码不存在");
         }
 
-        if (imageCodeInSession.isExpired()) {
-            sessionStrategy.removeAttribute(request, ValidateCodeController.SESSION_KEY_CODE + "IMAGE");
-            throw new ValidateCodeException("验证码已经过期");
-        }
-        if (!StringUtils.equals(imageCodeInSession.getCode(), codeInRequest)) {
+        if (!StringUtils.equals(validateCode.getCode(), codeInRequest)) {
             throw new ValidateCodeException("验证码不匹配");
         }
 
+        if (validateCode.isExpired()) {
+            sessionStrategy.removeAttribute(request, ValidateCodeController.SESSION_KEY_CODE + "SMS");
+            throw new ValidateCodeException("验证码已经过期");
+        }
+
         // 最后删除 session中的验证码
-        sessionStrategy.removeAttribute(request, ValidateCodeController.SESSION_KEY_CODE + "IMAGE");
+        sessionStrategy.removeAttribute(request, ValidateCodeController.SESSION_KEY_CODE + "SMS");
     }
 
     public AuthenticationFailureHandler getAuthenticationFailureHandler() {
@@ -109,13 +111,13 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
     @Override
     public void afterPropertiesSet() throws ServletException {
         super.afterPropertiesSet();
-        String[] configUrl = StringUtils.splitByWholeSeparatorPreserveAllTokens(securityProperties.getCode().getImageCode().getUrl(), ",");
+        String[] configUrl = StringUtils.splitByWholeSeparatorPreserveAllTokens(securityProperties.getCode().getSmsCode().getUrl(), ",");
         if (configUrl != null && configUrl.length > 0) {
             for (String s : configUrl) {
                 urls.add(s);
             }
         }
-        urls.add("/admin-meng/login");
+        urls.add("/admin-meng/mobile");
     }
 
     public SecurityProperties getSecurityProperties() {
