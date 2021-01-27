@@ -1,8 +1,9 @@
 package com.meng.core.pc.config;
 
+import com.meng.core.authentication.AbstractPasswordChannelSecurityConfig;
 import com.meng.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
-import com.meng.core.pc.authentication.AdminAuthenticationFailureHandler;
-import com.meng.core.pc.authentication.AdminAuthenticationSuccessHandler;
+import com.meng.core.config.ValidateCodeSecurityConfig;
+import com.meng.core.properties.SecurityConstants;
 import com.meng.core.properties.SecurityProperties;
 import com.meng.core.validate.code.SmsCodeFilter;
 import com.meng.core.validate.code.ValidateCodeFilter;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,20 +22,14 @@ import javax.sql.DataSource;
 
 /**
  * @author mengye
- * @Desc
+ * @Desc 浏览器安全配置
  * @date 2020/5/21 15:09
  */
 @Configuration
-public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
+public class PcSecurityConfig extends AbstractPasswordChannelSecurityConfig {
 
     @Autowired
     private SecurityProperties securityProperties;
-
-    @Autowired
-    private AdminAuthenticationSuccessHandler adminAuthenticationSuccessHandler;
-
-    @Autowired
-    private AdminAuthenticationFailureHandler adminAuthenticationFailureHandler;
 
     /**
      * 注入数据源
@@ -48,6 +42,9 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+
+    @Autowired
+    private ValidateCodeSecurityConfig validateCodeSecurityConfig;
 
     @Bean
     public PasswordEncoder getEncoder() {
@@ -66,40 +63,39 @@ public class PcSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 图片验证码
         ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
-        validateCodeFilter.setAuthenticationFailureHandler(adminAuthenticationFailureHandler);
         validateCodeFilter.setSecurityProperties(securityProperties);
         validateCodeFilter.afterPropertiesSet();
 
         // 短信验证码
         SmsCodeFilter smsCodeFilter = new SmsCodeFilter();
-        smsCodeFilter.setAuthenticationFailureHandler(adminAuthenticationFailureHandler);
         smsCodeFilter.setSecurityProperties(securityProperties);
         smsCodeFilter.afterPropertiesSet();
 
+        // 添加密码登录的 成功 失败处理配置
+        applyPasswordAuthenticationConfig(http);
 
-        http.addFilterBefore(smsCodeFilter, UsernamePasswordAuthenticationFilter.class)
+                //短信登录的配置
+        http.apply(smsCodeAuthenticationSecurityConfig)
+                .and()
+                .apply(validateCodeSecurityConfig)
+                .and()
+                .addFilterBefore(smsCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin()
-                .loginPage("/authentication/require")
-                //处理登录的请求
-                .loginProcessingUrl("/admin-meng/login")
-                //登录成功的处理
-                .successHandler(adminAuthenticationSuccessHandler)
-                //登录失败的处理
-                .failureHandler(adminAuthenticationFailureHandler)
-                .and()
                 .rememberMe()
-                .tokenRepository(persistentTokenRepository())
-                .tokenValiditySeconds(securityProperties.getPc().getRememberMeSeconds())
-                .userDetailsService(userDetailsService)
+                    .tokenRepository(persistentTokenRepository())
+                    .tokenValiditySeconds(securityProperties.getPc().getRememberMeSeconds())
+                    .userDetailsService(userDetailsService)
                 .and()
+                // 添加不用权限验证的url
                 .authorizeRequests()
-                .antMatchers("/authentication/require",
-                        securityProperties.getPc().getLoginPage(), "/code/*").permitAll()
-                .anyRequest()
-                .authenticated()
+                    .antMatchers(
+                            SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+                            securityProperties.getPc().getLoginPage(),
+                            SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*")
+                            .permitAll()
+                    .anyRequest()
+                    .authenticated()
                 .and()
-                .csrf().disable()
-                .apply(smsCodeAuthenticationSecurityConfig);
+                .csrf().disable();
     }
 }

@@ -1,5 +1,6 @@
 package com.meng.core.pc.controller;
 
+import com.meng.core.properties.SecurityConstants;
 import com.meng.core.properties.SecurityProperties;
 import com.meng.core.pc.support.SimpleResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ import java.io.IOException;
 
 /**
  * @author mengye
- * @Desc
+ * @Desc 需要身份认证默认跳转的工具
  * @date 2020/5/22 14:17
  */
 @Slf4j
@@ -43,7 +44,7 @@ public class PcSecurityController {
      * @param request
      * @param response
      */
-    @RequestMapping("/authentication/require")
+    @RequestMapping(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public SimpleResponse requireAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
         SavedRequest savedRequest = requestCache.getRequest(request, response);

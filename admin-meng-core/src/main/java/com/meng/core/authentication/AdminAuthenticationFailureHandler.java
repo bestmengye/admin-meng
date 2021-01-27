@@ -1,17 +1,13 @@
-/*
-package com.meng.core.pc.authentication;
+package com.meng.core.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meng.core.pc.support.SimpleResponse;
+import com.meng.core.authentication.support.SimpleResponse;
 import com.meng.core.properties.LoginType;
 import com.meng.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
@@ -20,13 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-*/
 /**
  * @author mengye
  * @desc 登陆成功的处理的handler
  * @date 2020/5/2719:58
- *//*
-
+ */
 @Component
 @Slf4j
 public class AdminAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
@@ -53,4 +47,3 @@ public class AdminAuthenticationFailureHandler extends SimpleUrlAuthenticationFa
 
     }
 }
-*/
