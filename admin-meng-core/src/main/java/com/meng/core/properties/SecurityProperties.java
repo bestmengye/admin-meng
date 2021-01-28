@@ -13,9 +13,21 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "admin.meng")
 public class SecurityProperties {
 
+    /**
+     * 浏览器属性配置
+     */
     private PcProperties pc = new PcProperties();
 
+
+    /**
+     * 验证码验证的属性配置
+     */
     private ValidateCodeProperties code = new ValidateCodeProperties();
+
+    /**
+     * 第三方属性配置
+     */
+    private SocialProperties socialProperties = new SocialProperties();
 
     public PcProperties getPc() {
         return pc;
@@ -31,5 +43,13 @@ public class SecurityProperties {
 
     public void setCode(ValidateCodeProperties code) {
         this.code = code;
+    }
+
+    public SocialProperties getSocialProperties() {
+        return socialProperties;
+    }
+
+    public void setSocialProperties(SocialProperties socialProperties) {
+        this.socialProperties = socialProperties;
     }
 }

@@ -13,6 +13,11 @@ public class QQUserInfo {
     private String ret;
 
     /**
+     * openId
+     */
+    private String openId;
+
+    /**
      * 返回信息
      */
     private String msg;
@@ -171,4 +176,13 @@ public class QQUserInfo {
     public void setIs_yellow_year_vip(String is_yellow_year_vip) {
         this.is_yellow_year_vip = is_yellow_year_vip;
     }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
 }

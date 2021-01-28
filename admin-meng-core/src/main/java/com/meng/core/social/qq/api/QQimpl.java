@@ -2,7 +2,6 @@ package com.meng.core.social.qq.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.oauth2.AbstractOAuth2ApiBinding;
 import org.springframework.social.oauth2.TokenStrategy;
 
@@ -23,7 +22,7 @@ public class QQimpl extends AbstractOAuth2ApiBinding implements QQ {
     /**
      * 获取用户信息url
      */
-    public static final String URL_GET_USERINFO = "https://graph.qq.com/user/get_user_info?oauth_consumer_key=%s&openid=%s";
+    public static final String URL_GET_USER_INFO = "https://graph.qq.com/user/get_user_info?oauth_consumer_key=%s&openid=%s";
 
     private String appId;
 
@@ -52,13 +51,17 @@ public class QQimpl extends AbstractOAuth2ApiBinding implements QQ {
      * @return
      */
     @Override
-    public QQUserInfo getUserInfo() throws IOException {
+    public QQUserInfo getUserInfo() {
 
         // 执行获取 QQ用户信息的url
-        String openIdUrl = String.format(URL_GET_USERINFO, appId, openId);
+        String openIdUrl = String.format(URL_GET_USER_INFO, appId, openId);
         String result = getRestTemplate().getForObject(openIdUrl, String.class);
 
         System.out.println("获取QQ用户信息：" + result);
-        return objectMapper.readValue(result, QQUserInfo.class);
+        try {
+            return objectMapper.readValue(result, QQUserInfo.class);
+        } catch (IOException e) {
+            throw new RuntimeException("获取用户信息失败!");
+        }
     }
 }

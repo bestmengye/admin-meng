@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
 
@@ -46,6 +47,12 @@ public class PcSecurityConfig extends AbstractPasswordChannelSecurityConfig {
     @Autowired
     private ValidateCodeSecurityConfig validateCodeSecurityConfig;
 
+    /**
+     * 添加social配置
+     */
+    @Autowired
+    private SpringSocialConfigurer springSocialConfigurer;
+
     @Bean
     public PasswordEncoder getEncoder() {
         return new BCryptPasswordEncoder();
@@ -74,27 +81,29 @@ public class PcSecurityConfig extends AbstractPasswordChannelSecurityConfig {
         // 添加密码登录的 成功 失败处理配置
         applyPasswordAuthenticationConfig(http);
 
-                //短信登录的配置
+        //短信登录的配置
         http.apply(smsCodeAuthenticationSecurityConfig)
                 .and()
                 .apply(validateCodeSecurityConfig)
                 .and()
+                .apply(springSocialConfigurer)
+                .and()
                 .addFilterBefore(smsCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .rememberMe()
-                    .tokenRepository(persistentTokenRepository())
-                    .tokenValiditySeconds(securityProperties.getPc().getRememberMeSeconds())
-                    .userDetailsService(userDetailsService)
+                .tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(securityProperties.getPc().getRememberMeSeconds())
+                .userDetailsService(userDetailsService)
                 .and()
                 // 添加不用权限验证的url
                 .authorizeRequests()
-                    .antMatchers(
-                            SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
-                            securityProperties.getPc().getLoginPage(),
-                            SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*")
-                            .permitAll()
-                    .anyRequest()
-                    .authenticated()
+                .antMatchers(
+                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+                        securityProperties.getPc().getLoginPage(),
+                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*")
+                .permitAll()
+                .anyRequest()
+                .authenticated()
                 .and()
                 .csrf().disable();
     }
