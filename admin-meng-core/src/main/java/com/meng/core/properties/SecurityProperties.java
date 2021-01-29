@@ -27,7 +27,7 @@ public class SecurityProperties {
     /**
      * 第三方属性配置
      */
-    private SocialProperties socialProperties = new SocialProperties();
+    private SocialProperties social = new SocialProperties();
 
     public PcProperties getPc() {
         return pc;
@@ -45,11 +45,11 @@ public class SecurityProperties {
         this.code = code;
     }
 
-    public SocialProperties getSocialProperties() {
-        return socialProperties;
+    public SocialProperties getSocial() {
+        return social;
     }
 
-    public void setSocialProperties(SocialProperties socialProperties) {
-        this.socialProperties = socialProperties;
+    public void setSocial(SocialProperties social) {
+        this.social = social;
     }
 }

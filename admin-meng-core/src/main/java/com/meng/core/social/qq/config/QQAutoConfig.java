@@ -23,7 +23,7 @@ public class QQAutoConfig extends SocialAutoConfigurerAdapter {
 
     @Override
     protected ConnectionFactory<?> createConnectionFactory() {
-        QQProperties qq = securityProperties.getSocialProperties().getQq();
+        QQProperties qq = securityProperties.getSocial().getQq();
         return new QQConnectionFactory(qq.getProviderId(), qq.getAppId(), qq.getAppSecret());
     }
 }
