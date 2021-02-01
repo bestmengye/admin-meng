@@ -1,6 +1,7 @@
 package com.meng.core.social.qq.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.social.oauth2.AbstractOAuth2ApiBinding;
 import org.springframework.social.oauth2.TokenStrategy;
@@ -12,6 +13,7 @@ import java.io.IOException;
  * @desc
  * @date 2021/1/28 16:21
  */
+@Slf4j
 public class QQimpl extends AbstractOAuth2ApiBinding implements QQ {
 
     /**
@@ -39,9 +41,9 @@ public class QQimpl extends AbstractOAuth2ApiBinding implements QQ {
         String openIdUrl = String.format(URL_GET_OPENID, accessToken);
 
         String result = getRestTemplate().getForObject(openIdUrl, String.class);
-        System.out.println(result);
+        log.info("获取QQ返回结果:{}", result);
 
-        this.openId = StringUtils.substringBetween(result, "\"openId\":", "}");
+        this.openId = StringUtils.substringBetween(result, "\"openid\":\"", "\"}");
 
     }
 
@@ -57,9 +59,13 @@ public class QQimpl extends AbstractOAuth2ApiBinding implements QQ {
         String openIdUrl = String.format(URL_GET_USER_INFO, appId, openId);
         String result = getRestTemplate().getForObject(openIdUrl, String.class);
 
-        System.out.println("获取QQ用户信息：" + result);
+        log.info("获取QQ用户信息：{}", result);
+        QQUserInfo qqUserInfo = null;
         try {
-            return objectMapper.readValue(result, QQUserInfo.class);
+            qqUserInfo = objectMapper.readValue(result, QQUserInfo.class);
+            // 获取到qq 用户信息 设置openId
+            qqUserInfo.setOpenId(this.openId);
+            return qqUserInfo;
         } catch (IOException e) {
             throw new RuntimeException("获取用户信息失败!");
         }

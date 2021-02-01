@@ -1,5 +1,7 @@
 package com.meng.core.social;
 
+import com.meng.core.properties.SecurityProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,10 +22,14 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableSocial
+@Slf4j
 public class SocialConfig extends SocialConfigurerAdapter {
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    private SecurityProperties securityProperties;
 
     @Override
     public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
@@ -35,6 +41,9 @@ public class SocialConfig extends SocialConfigurerAdapter {
 
     @Bean
     public SpringSocialConfigurer adminMengSocialSecurityConfig() {
-        return new SpringSocialConfigurer();
+        String filterProcessUrl = securityProperties.getSocial().getFilterProcessUrl();
+        log.info("------------处理的url" + filterProcessUrl);
+        AdminMengSpringSocialConfigurer configurer = new AdminMengSpringSocialConfigurer(filterProcessUrl);
+        return configurer;
     }
 }

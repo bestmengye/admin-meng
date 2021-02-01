@@ -1,6 +1,7 @@
 package com.meng.core.validate.code;
 
 import com.meng.core.properties.SecurityProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import java.util.Set;
  * @desc 图片验证码拦截器 oncePerRequestFilter: spring security保证他只会被调用一次
  * @date 2020/12/22 16:36
  */
+@Slf4j
 public class SmsCodeFilter extends OncePerRequestFilter implements InitializingBean {
 
     @Autowired
@@ -45,7 +47,7 @@ public class SmsCodeFilter extends OncePerRequestFilter implements InitializingB
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        System.out.println(requestURI);
+        logger.info(requestURI);
 
         boolean action = false;
         // 匹配设置的路径

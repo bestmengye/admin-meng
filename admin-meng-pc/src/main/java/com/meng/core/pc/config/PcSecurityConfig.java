@@ -100,7 +100,8 @@ public class PcSecurityConfig extends AbstractPasswordChannelSecurityConfig {
                 .antMatchers(
                         SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
                         securityProperties.getPc().getLoginPage(),
-                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*")
+                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
+                        "/bookshop/*")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
