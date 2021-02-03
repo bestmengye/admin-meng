@@ -44,7 +44,7 @@ public class TimeAspect {
         }
         /*String simpleName = aClass.getSimpleName();*/
 
-        /*String methodName  = jp.getSignature().getName();-*/
+        /*String methodName  = jp.getSignature().getUsername();-*/
         log.info("------------Aspect---Before---end---------------");
         /*Method method = aClass.getMethod(methodName);
         Annotation[] methodAnnotations = method.getAnnotations();

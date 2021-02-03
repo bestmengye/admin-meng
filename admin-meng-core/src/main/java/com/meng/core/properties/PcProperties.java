@@ -6,6 +6,7 @@ package com.meng.core.properties;
  * @date 2020/5/26 21:00
  */
 public class PcProperties {
+    private String singUpUrl = "/signUp.html";
 
     private String loginPage = "/login.html";
 
@@ -41,5 +42,13 @@ public class PcProperties {
 
     public void setRememberMeSeconds(int rememberMeSeconds) {
         this.rememberMeSeconds = rememberMeSeconds;
+    }
+
+    public String getSingUpUrl() {
+        return singUpUrl;
+    }
+
+    public void setSingUpUrl(String singUpUrl) {
+        this.singUpUrl = singUpUrl;
     }
 }

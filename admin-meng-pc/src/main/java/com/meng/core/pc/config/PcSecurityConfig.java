@@ -101,7 +101,8 @@ public class PcSecurityConfig extends AbstractPasswordChannelSecurityConfig {
                         SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
                         securityProperties.getPc().getLoginPage(),
                         SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
-                        "/bookshop/*")
+                        securityProperties.getPc().getSingUpUrl(),
+                        "/user/regist")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

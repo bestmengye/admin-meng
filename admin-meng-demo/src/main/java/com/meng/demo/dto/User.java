@@ -26,7 +26,7 @@ public class User {
 
     @JsonView(Simple.class)
     @NotNull(message = "姓名不能为空")
-    private String name;
+    private String username;
 
     @JsonView(Simple.class)
     @Min(value = 0,message = "年龄不能小于0")

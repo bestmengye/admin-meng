@@ -21,6 +21,8 @@ public class QQUserInfo {
      * 返回信息
      */
     private String msg;
+
+    private String is_lost;
     /**
      * 昵称
      */
@@ -38,11 +40,29 @@ public class QQUserInfo {
     private String figureurl_2;
     private String figureurl_qq_1;
     private String figureurl_qq_2;
+    /**
+     * 100 x 100 的头像
+     */
+    private String figureurl_qq;
+    private String figureurl_type;
 
     /**
-     * 性别  如果获取不到则默认返回"男"
+     * 性别  如果获取不到则默认返回: "男"
+     */
+    private String gender_type;
+
+    /**
+     * 性别 1男2女
      */
     private String gender;
+
+    /**
+     * 省份 例:上海
+     */
+    private String province;
+
+    private String constellation;
+
     /**
      * 是否是黄钻
      */
@@ -64,6 +84,72 @@ public class QQUserInfo {
      * 是否是黄钻年费VIP
      */
     private String is_yellow_year_vip;
+
+    /**
+     * 城市  例:"浦东新区"
+     */
+    private String city;
+    /**
+     * 年份 2019
+     */
+    private String year;
+
+    public String getFigureurl_type() {
+        return figureurl_type;
+    }
+
+    public void setFigureurl_type(String figureurl_type) {
+        this.figureurl_type = figureurl_type;
+    }
+
+    public String getFigureurl_qq() {
+        return figureurl_qq;
+    }
+
+    public void setFigureurl_qq(String figureurl_qq) {
+        this.figureurl_qq = figureurl_qq;
+    }
+
+    public String getConstellation() {
+        return constellation;
+    }
+
+    public void setConstellation(String constellation) {
+        this.constellation = constellation;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
 
     public String getRet() {
         return ret;
@@ -129,12 +215,12 @@ public class QQUserInfo {
         this.figureurl_qq_2 = figureurl_qq_2;
     }
 
-    public String getGender() {
-        return gender;
+    public String getGender_type() {
+        return gender_type;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setGender_type(String gender_type) {
+        this.gender_type = gender_type;
     }
 
     public String getIs_yellow_vip() {
@@ -185,4 +271,11 @@ public class QQUserInfo {
         this.openId = openId;
     }
 
+    public String getIs_lost() {
+        return is_lost;
+    }
+
+    public void setIs_lost(String is_lost) {
+        this.is_lost = is_lost;
+    }
 }
