@@ -10,6 +10,7 @@ import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.social.config.annotation.EnableSocial;
 import org.springframework.social.config.annotation.SocialConfigurerAdapter;
 import org.springframework.social.connect.ConnectionFactoryLocator;
+import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
 import org.springframework.social.connect.web.ProviderSignInUtils;
@@ -33,6 +34,9 @@ public class SocialConfig extends SocialConfigurerAdapter {
     @Autowired
     private SecurityProperties securityProperties;
 
+    @Autowired(required = false)
+    private ConnectionSignUp connectionSignUp;
+
     @Autowired
     @Primary
     @Bean
@@ -40,6 +44,11 @@ public class SocialConfig extends SocialConfigurerAdapter {
         JdbcUsersConnectionRepository repository = new JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText());
         // 表名称不可变 可以加前缀
         repository.setTablePrefix("meng_");
+
+        // 基于用户自己实现了注册逻辑 则直接进入当前系统
+        if (connectionSignUp != null) {
+            repository.setConnectionSignUp(connectionSignUp);
+        }
         return repository;
     }
 
@@ -54,7 +63,7 @@ public class SocialConfig extends SocialConfigurerAdapter {
     }
 
     @Bean
-    public ProviderSignInUtils providerSignInUtils(ConnectionFactoryLocator connectionFactoryLocator){
+    public ProviderSignInUtils providerSignInUtils(ConnectionFactoryLocator connectionFactoryLocator) {
         return new ProviderSignInUtils(connectionFactoryLocator,
                 getUsersConnectionRepository(connectionFactoryLocator));
     }
