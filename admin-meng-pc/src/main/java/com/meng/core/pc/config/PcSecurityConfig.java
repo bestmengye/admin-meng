@@ -102,7 +102,7 @@ public class PcSecurityConfig extends AbstractPasswordChannelSecurityConfig {
                         securityProperties.getPc().getLoginPage(),
                         SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
                         securityProperties.getPc().getSingUpUrl(),
-                        "/user/regist")
+                        "/user/regist","/")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
