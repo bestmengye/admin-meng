@@ -3,6 +3,7 @@ package com.meng.core.pc.config;
 import com.meng.core.authentication.AbstractPasswordChannelSecurityConfig;
 import com.meng.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.meng.core.config.ValidateCodeSecurityConfig;
+import com.meng.core.pc.session.AminMengExpireSessionStrategy;
 import com.meng.core.properties.SecurityConstants;
 import com.meng.core.properties.SecurityProperties;
 import com.meng.core.validate.code.SmsCodeFilter;
@@ -83,18 +84,28 @@ public class PcSecurityConfig extends AbstractPasswordChannelSecurityConfig {
 
         //短信登录的配置
         http.apply(smsCodeAuthenticationSecurityConfig)
-                .and()
+                    .and()
                 .apply(validateCodeSecurityConfig)
-                .and()
+                    .and()
                 .apply(springSocialConfigurer)
-                .and()
+                    .and()
                 .addFilterBefore(smsCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .rememberMe()
-                .tokenRepository(persistentTokenRepository())
-                .tokenValiditySeconds(securityProperties.getPc().getRememberMeSeconds())
-                .userDetailsService(userDetailsService)
-                .and()
+                    .tokenRepository(persistentTokenRepository())
+                    .tokenValiditySeconds(securityProperties.getPc().getRememberMeSeconds())
+                    .userDetailsService(userDetailsService)
+                    .and()
+                .sessionManagement()
+                    // 未验证的处理的url
+                    .invalidSessionUrl("/session/invalid")
+                    // 最大的session数量
+                    .maximumSessions(1)
+                    // session 只能有1个用登录
+                    .maxSessionsPreventsLogin(true)
+                    .expiredSessionStrategy(new AminMengExpireSessionStrategy())
+                    .and()
+                    .and()
                 // 添加不用权限验证的url
                 .authorizeRequests()
                 .antMatchers(
@@ -102,7 +113,9 @@ public class PcSecurityConfig extends AbstractPasswordChannelSecurityConfig {
                         securityProperties.getPc().getLoginPage(),
                         SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
                         securityProperties.getPc().getSingUpUrl(),
-                        "/user/regist","/")
+                        "/user/regist",
+                        "/",
+                        "/session/invalid")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

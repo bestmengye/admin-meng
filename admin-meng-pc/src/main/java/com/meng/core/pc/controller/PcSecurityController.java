@@ -1,9 +1,9 @@
 package com.meng.core.pc.controller;
 
+import com.meng.core.pc.support.SimpleResponse;
 import com.meng.core.pc.support.SocialUserInfo;
 import com.meng.core.properties.SecurityConstants;
 import com.meng.core.properties.SecurityProperties;
-import com.meng.core.pc.support.SimpleResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.web.ProviderSignInUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -70,11 +69,18 @@ public class PcSecurityController {
     public SocialUserInfo getSocialUserInfo(HttpServletRequest request) {
         SocialUserInfo userInfo = new SocialUserInfo();
         Connection<?> connection = providerSignInUtils.getConnectionFromSession(new ServletWebRequest(request));
-        userInfo.setProviderId(connection.getKey().getProviderId() );
+        userInfo.setProviderId(connection.getKey().getProviderId());
         userInfo.setProviderUserId(connection.getKey().getProviderUserId());
         userInfo.setNickName(connection.getDisplayName());
         userInfo.setHeadimg(connection.getImageUrl());
         return userInfo;
+    }
+
+    @GetMapping("/session/invalid")
+    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+    public SimpleResponse sessionInvalid() {
+        String message = "seesion已失效";
+        return new SimpleResponse(message);
     }
 
 
