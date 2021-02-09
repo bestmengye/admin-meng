@@ -2,12 +2,16 @@ package com.meng.core.social.qq.config;
 
 import com.meng.core.properties.QQProperties;
 import com.meng.core.properties.SecurityProperties;
+import com.meng.core.social.AdminMengConnectView;
 import com.meng.core.social.qq.connet.QQConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.social.SocialAutoConfigurerAdapter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.social.connect.ConnectionFactory;
+import org.springframework.web.servlet.View;
 
 /**
  * @author mengye
@@ -25,5 +29,11 @@ public class QQAutoConfig extends SocialAutoConfigurerAdapter {
     protected ConnectionFactory<?> createConnectionFactory() {
         QQProperties qq = securityProperties.getSocial().getQq();
         return new QQConnectionFactory(qq.getProviderId(), qq.getAppId(), qq.getAppSecret());
+    }
+
+    @Bean({"connect/loginConnected","connect/loginConnect"})
+    @ConditionalOnMissingBean(name = "loginConnectedView")
+    public View loginConnection(){
+        return new AdminMengConnectView();
     }
 }
